@@ -1,0 +1,29 @@
+{
+  "name": "tf-3d-env",
+  "version": "1.0.0",
+  "description": "TechFusion 3D/Unity 開発標準環境 - Claude Code 開発標準",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "install:env": "node scripts/install.js",
+    "install:env:dry": "node scripts/install.js --dry-run"
+  },
+  "keywords": [
+    "claude-code",
+    "unity",
+    "3d",
+    "game-development",
+    "csharp",
+    "shader",
+    "ecs",
+    "performance"
+  ],
+  "author": "Tech Fusion",
+  "license": "MIT",
+  "type": "commonjs",
+  "peerDependencies": {
+    "tf-standard-env": ">=2.0.0"
+  }
+}

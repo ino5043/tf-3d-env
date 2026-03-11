@@ -1,0 +1,78 @@
+{
+  "hooks": [
+    {
+      "type": "PostToolUse",
+      "matcher": {
+        "tool": "Edit",
+        "filePattern": "*.cs"
+      },
+      "hooks": [
+        {
+          "command": "command -v dotnet >/dev/null 2>&1 && dotnet format --include \"$FILE\" 2>/dev/null || true",
+          "description": "C# auto-format with dotnet format (on .cs edit)"
+        }
+      ]
+    },
+    {
+      "type": "PreToolUse",
+      "matcher": {
+        "tool": "Write",
+        "filePattern": "*.meta"
+      },
+      "hooks": [
+        {
+          "command": "echo '⚠ .meta ファイルを直接作成しようとしています。Unity Editor でアセットを追加すると自動生成されます。手動作成が本当に必要か確認してください。'",
+          "description": "Warn before creating .meta files manually"
+        }
+      ]
+    },
+    {
+      "type": "PostToolUse",
+      "matcher": {
+        "tool": "Edit",
+        "filePattern": "*.shader"
+      },
+      "hooks": [
+        {
+          "command": "grep -n 'tex2D\\|tex2Dlod\\|discard' \"$FILE\" && echo '⚠ tex2D/discard found. Consider performance impact on mobile platforms.' || true",
+          "description": "Shader performance warning (tex2D, discard)"
+        }
+      ]
+    },
+    {
+      "type": "PostToolUse",
+      "matcher": {
+        "tool": "Edit",
+        "filePattern": "*.cs"
+      },
+      "hooks": [
+        {
+          "command": "grep -n 'FindObjectOfType\\|FindObjectsOfType\\|GameObject.Find\\|GetComponent' \"$FILE\" | head -5 && echo '⚠ Runtime Find/GetComponent detected. Consider caching references or using DI.' || true",
+          "description": "Detect expensive Unity API calls (Find, GetComponent at runtime)"
+        }
+      ]
+    },
+    {
+      "type": "PostToolUse",
+      "matcher": {
+        "tool": "Edit",
+        "filePattern": "*.cs"
+      },
+      "hooks": [
+        {
+          "command": "grep -n 'new List\\|new Dictionary\\|new HashSet\\|string\\.Concat\\|\\+.*string' \"$FILE\" | grep -v '// pool\\|// cache\\|// init\\|Awake\\|Start\\|OnEnable' | head -5 && echo '⚠ Potential GC allocation in hot path. Consider object pooling or pre-allocation.' || true",
+          "description": "Detect GC allocations in C# (new collections, string concat)"
+        }
+      ]
+    },
+    {
+      "type": "Stop",
+      "hooks": [
+        {
+          "command": "git diff --name-only --diff-filter=AM 2>/dev/null | grep '\\.cs$' | xargs grep -l 'Debug.Log' 2>/dev/null | head -5 && echo '⚠ Debug.Log found in modified C# files. Remove or wrap with #if UNITY_EDITOR before release.' || true",
+          "description": "Check for Debug.Log in modified C# files"
+        }
+      ]
+    }
+  ]
+}
