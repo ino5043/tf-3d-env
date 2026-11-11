@@ -196,7 +196,7 @@ const SECTION = `
 
 | ステップ | コマンド | 用途 |
 |---------|---------|------|
-| 1. 計画 | \`/plan\` | 機能設計を確認してから着手 |
+| 1. 計画 | \`/tf-plan\` | 機能設計を確認してから着手 |
 | 2. Unity レビュー | \`/unity-review\` | アーキ + シェーダーレビュー |
 | 3. TDD | \`/unity-tdd\` | EditMode / PlayMode テスト |
 | 4. パフォーマンス | \`/perf-check\` | FPS, Draw Call, メモリ分析 |
